@@ -12,7 +12,7 @@ class InitialSchema extends Migration
      */
     public function up()
     {
-        Schema::create('members', function(Blueprint $table) {
+        Schema::create('members', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('first_name');
@@ -23,7 +23,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('external_profiles', function(Blueprint $table) {
+        Schema::create('external_profiles', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('member_id')->unsigned();
@@ -35,14 +35,14 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('terms', function(Blueprint $table) {
+        Schema::create('terms', function (Blueprint $table) {
             $table->increments('id');
 
             $table->date('start_date');
             $table->date('end_date');
         });
 
-        Schema::create('memberships', function(Blueprint $table) {
+        Schema::create('memberships', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('member_id')->unsigned();
@@ -56,7 +56,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('officers', function(Blueprint $table) {
+        Schema::create('officers', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('member_id')->unsigned();
@@ -70,7 +70,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('tags', function(Blueprint $table) {
+        Schema::create('tags', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('body');
@@ -79,7 +79,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('quotes', function(Blueprint $table) {
+        Schema::create('quotes', function (Blueprint $table) {
             $table->increments('id');
 
             $table->boolean('approved')->default(false);
@@ -93,7 +93,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('lingo', function(Blueprint $table) {
+        Schema::create('lingo', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('phrase');
@@ -103,7 +103,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('tips', function(Blueprint $table) {
+        Schema::create('tips', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('body');
@@ -117,7 +117,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('groups', function(Blueprint $table) {
+        Schema::create('groups', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('name');
@@ -129,7 +129,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('group_member', function(Blueprint $table) {
+        Schema::create('group_member', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('group_id')->unsigned();
@@ -141,7 +141,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('agenda_items', function(Blueprint $table) {
+        Schema::create('agenda_items', function (Blueprint $table) {
             $table->increments('id');
 
             $table->string('body');
@@ -153,7 +153,7 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('links', function(Blueprint $table) {
+        Schema::create('links', function (Blueprint $table) {
             $table->increments('id');
 
             $table->integer('member_id')->unsigned();
@@ -166,12 +166,38 @@ class InitialSchema extends Migration
             $table->timestamps();
         });
 
-        Schema::create('events', function(Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->increments('id');
 
+            $table->string('description');
+            $table->datetime('end_date');
+            $table->boolean('featured');
             $table->integer('group_id')->unsigned();
+            $table->string('image');
+            $table->string('location');
+            $table->string('name');
+            $table->string('recurrence')->nullable();
+            $table->string('short_description');
+            $table->string('short_name');
+            $table->datetime('start_date');
 
             $table->foreign('group_id')->references('id')->on('groups');
+
+            $table->softDeletes();
+            $table->timestamps();
+        });
+
+        Schema::create('tasks', function (Blueprint $table) {
+            $table->increments('id');
+
+            $table->string('name');
+            $table->string('description');
+            $table->boolean('completed');
+            $table->integer('creator_id')->unsigned();
+            $table->integer('assignee_id')->unsigned();
+
+            $table->foreign('creator_id')->references('id')->on('members');
+            $table->foreign('assignee_id')->references('id')->on('members');
 
             $table->softDeletes();
             $table->timestamps();
@@ -182,7 +208,7 @@ class InitialSchema extends Migration
          */
 
         // Create table for storing roles
-        Schema::create('roles', function(Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
@@ -191,7 +217,7 @@ class InitialSchema extends Migration
         });
 
         // Create table for associating roles to users (Many-to-Many)
-        Schema::create('role_member', function(Blueprint $table) {
+        Schema::create('role_member', function (Blueprint $table) {
             $table->integer('member_id')->unsigned();
             $table->integer('role_id')->unsigned();
 
@@ -204,7 +230,7 @@ class InitialSchema extends Migration
         });
 
         // Create table for storing permissions
-        Schema::create('permissions', function(Blueprint $table) {
+        Schema::create('permissions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique();
             $table->string('display_name')->nullable();
@@ -213,7 +239,7 @@ class InitialSchema extends Migration
         });
 
         // Create table for associating permissions to roles (Many-to-Many)
-        Schema::create('permission_role', function(Blueprint $table) {
+        Schema::create('permission_role', function (Blueprint $table) {
             $table->integer('permission_id')->unsigned();
             $table->integer('role_id')->unsigned();
 
@@ -247,6 +273,7 @@ class InitialSchema extends Migration
         Schema::drop('agenda_items');
         Schema::drop('links');
         Schema::drop('events');
+        Schema::drop('tasks');
         Schema::drop('roles');
         Schema::drop('role_member');
         Schema::drop('permissions');

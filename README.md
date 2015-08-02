@@ -11,6 +11,8 @@ things as events, members, memberships, mentors, officers, and so on.
 
 ## Getting Started
 
+On a Mac or Linux system? Check out [this](https://youtu.be/iF3erw9RVlg) video for a short screencast to speed things up.
+
 To get started, follow these steps:
 
 1. Change directory into the root of the repository.
@@ -41,9 +43,12 @@ which is `http[s]://{host}/api/v1/auth/google/callback`.
 The endpoints are controlled by Laravel routes. To look at the routing setup,
 open up the router definition in `app/Http/routes.php`.
 
-All `Controllers` within this project are RESTful controllers (as defined by
+Most `Controllers` within this project are RESTful controllers (as defined by
 Laravel, denoted by the `Route::resource` syntax in `routes.php`). The specific
-mapping for this type of controller can be found in Laravel's [documentation](http://laravel.com/docs/5.1/controllers#restful-resource-controllers).
+mapping for this type of controller can be found in Laravel's [documentation](http://laravel.com/docs/5.1/controllers#restful-resource-controllers). For the most part, you probably
+want a resource controller, unless doing something more specialized such as
+authentication or statistics. In that case, you should take a look at using the
+`Route::controller` syntax found [here](http://laravel.com/docs/5.1/controllers#implicit-controllers).
 
 The API root of the application is currently set to `/api/v1`. This route is
 also controlled by `app/Http/routes.php`, the definition of which is controlled
